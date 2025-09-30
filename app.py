@@ -181,3 +181,14 @@ def sectors(tickers: Optional[str] = None, date: Optional[str] = None):
     good.sort(key=lambda r: r["strength_score"], reverse=True)
     top4 = [r["ticker"] for r in good[:4]]
     return {"date": str(date_et), "top4": top4, "rows": good}
+
+@app.get("/sectors_bottom")
+def sectors_bottom(tickers: Optional[str] = None, date: Optional[str] = None):
+    tick_list = [t.strip().upper() for t in (tickers.split(",") if tickers else DEFAULT_TICKERS)]
+    user_date = dt.date.fromisoformat(date) if date else None
+    date_et, asof_dt_et = resolve_target_datetime(user_date=user_date)
+    rows = [compute_score_for_ticker(t, date_et, asof_dt_et) for t in tick_list]
+    good = [r for r in rows if "strength_score" in r]
+    good.sort(key=lambda r: r["strength_score"])  # ascending order
+    bottom4 = [r["ticker"] for r in good[:4]]
+    return {"date": str(date_et), "bottom4": bottom4, "rows": good}
