@@ -190,5 +190,5 @@ def sectors_bottom(tickers: Optional[str] = None, date: Optional[str] = None):
     rows = [compute_score_for_ticker(t, date_et, asof_dt_et) for t in tick_list]
     good = [r for r in rows if "strength_score" in r]
     good.sort(key=lambda r: r["strength_score"])  # ascending order
-    bottom4 = [r["ticker"] for r in good[:3]]
+    bottom3 = [r["ticker"] for r in good[:3]]     # name matches
     return {"date": str(date_et), "bottom3": bottom3, "rows": good}
